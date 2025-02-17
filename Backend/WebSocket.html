@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Chat 1005</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #chat {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+        #messageInput {
+            width: calc(100% - 80px);
+            padding: 5px;
+        }
+        #sendButton {
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chat</h1>
+    <div id="chat"></div>
+    <input type="text" id="messageInput" placeholder="Type your message..." />
+    <button id="sendButton">Send</button>
+
+    <script>
+        const userId = 1005; // Replace with the actual user ID
+        const socket = new WebSocket(`ws://localhost:8000/ws/chat/${userId}/`);
+
+
+        socket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            console.log('Message received:', data.message);
+            displayMessage(data);
+        };
+
+        document.getElementById('sendButton').onclick = function() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value;
+
+            if (message) {
+                sendMessage(userId, 1001, message); // Replace RECEIVER_USER_ID with the actual receiver ID
+                messageInput.value = ''; // Clear the input field
+            }
+        };
+
+        function sendMessage(senderId, receiverId, message) {
+            const msg = {
+                userId: senderId,
+                myId: receiverId,
+                message: message
+            };
+            socket.send(JSON.stringify(msg));
+        }
+
+        function displayMessage(data) {
+            const chatDiv = document.getElementById('chat');
+            const messageElement = document.createElement('div');
+            messageElement.textContent = `${data.sender}: ${data.message}`;
+            chatDiv.appendChild(messageElement);
+            chatDiv.scrollTop = chatDiv.scrollHeight; // Scroll to the bottom
+        }
+    </script>
+</body>
+</html>
