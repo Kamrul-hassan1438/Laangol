@@ -1,0 +1,30 @@
+Set-ExecutionPolicy RemoteSigned -Scope Process
+
+env\scripts\activate
+
+
+cd laangol
+python manage.py runserver 
+
+
+cd marketplace
+python manage.py runserver 8001
+
+cd recruits
+python manage.py runserver 8002
+
+cd Storehouse
+python manage.py runserver 8003
+
+cd Administration
+python manage.py runserver 8004
+
+cd agroaegis
+python manage.py runserver 8005
+
+
+cd knn_project
+python manage.py runserver 8007
+
+cd message 
+python manage.py runserver 8008
